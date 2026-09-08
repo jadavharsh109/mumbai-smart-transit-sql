@@ -1,78 +1,77 @@
 ﻿# 🚆 Mumbai Public Transit & Smart Mobility Network
 
 [![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![SQL Architecture](https://img.shields.io/badge/SQL-Relational%20Schema%20%26%20Constraints-00758F?style=for-the-badge&logo=sqlite&logoColor=white)](https://en.wikipedia.org/wiki/SQL)
-[![Domain](https://img.shields.io/badge/Domain-Urban%20Mobility%20%26%20Transit%20Analytics-27AE60?style=for-the-badge)](https://github.com/jadavharsh109/mumbai-smart-transit-sql)
+[![SQL](https://img.shields.io/badge/SQL-Database%20Design-00758F?style=for-the-badge&logo=sqlite&logoColor=white)](https://en.wikipedia.org/wiki/SQL)
+[![Domain](https://img.shields.io/badge/Domain-Public%20Transportation-27AE60?style=for-the-badge)](https://github.com/jadavharsh109/mumbai-smart-transit-sql)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Harsh%20Jadav-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/harshjadav0901/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-An enterprise-grade **relational database architecture and smart mobility analytics system** modeling Mumbai’s multi-modal urban transit network (Metro rakes and Electric Bus fleets). Features 7 normalized tables, referential integrity constraints, performance indexes, reusable reporting views, and advanced analytical queries evaluating commuter mobility, route profitability, and vehicle maintenance economics.
+A complete **relational database design and SQL transit analysis project** modeling Mumbai’s public transport system, including Metro trains and Electric Buses. 
+
+It connects stations, travel routes, transit vehicles, passenger demographics, daily trips, and repair maintenance. The goal is to evaluate route profitability, travel times, fleet maintenance costs, and commuter travel passes to help transit planners improve city mobility.
 
 ---
 
 ## 📑 Table of Contents
-- [📌 Problem Statement & Architecture Goals](#-problem-statement--architecture-goals)
-- [📁 Project Structure](#-project-structure)
-- [🗄️ Relational Entity-Relationship (ER) Architecture](#️-relational-entity-relationship-er-architecture)
-- [📋 Schema Data Dictionary](#-schema-data-dictionary)
-- [👁️ Reusable Reporting Views](#️-reusable-reporting-views)
-- [📊 Key Transit KPIs & Operational Insights](#-key-transit-kpis--operational-insights)
-  - [1. Multi-Table Relational 4-Way JOIN](#1-multi-table-relational-4-way-join)
-  - [2. Highest Revenue Transit Routes](#2-highest-revenue-transit-routes)
-  - [3. Spare Fleet Detection (LEFT JOIN)](#3-spare-fleet-detection-left-join)
-  - [4. Commuter Spend Segmentation (Window Functions)](#4-commuter-spend-segmentation-window-functions)
-  - [5. Vehicle Maintenance Cost per Seat](#5-vehicle-maintenance-cost-per-seat)
-  - [6. Fleet Operational Utilization Ratio](#6-fleet-operational-utilization-ratio)
-- [🛠️ Database Administration & SQL Highlights](#️-database-administration--sql-highlights)
-- [🚀 Quickstart & Setup Guide](#-quickstart--setup-guide)
+- [📌 Project Overview](#-project-overview)
+- [📁 Project Files](#-project-files)
+- [🗄️ Database Architecture (ER Diagram)](#️-database-architecture-er-diagram)
+- [📋 The 7 Database Tables](#-the-7-database-tables)
+- [📊 Key Transit & Business Insights](#-key-transit--business-insights)
+- [🛠️ SQL Skills Used](#️-sql-skills-used)
+- [🚀 How to Run This Project](#-how-to-run-this-project)
 - [👨‍💻 Author](#-author)
 
 ---
 
-## 📌 Problem Statement & Architecture Goals
+## 📌 Project Overview
 
-Mumbai operates one of the world's highest-density urban transportation networks. Managing multi-modal operations across Metro lines and feeder bus routes presents core engineering challenges:
-1. **Referential Integrity:** Ensuring trip records correctly map to active commuters, routes, and operational rolling stock.
-2. **Fleet Allocation:** Identifying unassigned or underutilized transit vehicles while tracking preventative maintenance costs.
-3. **Route Profitability:** Evaluating revenue per kilometer and route load factors to optimize scheduling and frequency.
-4. **Commuter Profiling:** Segmenting travelers across pass categories (`Monthly Pass`, `Student Pass`, `Senior Citizen`, `Pay Per Ride`) to forecast farebox cashflow.
+Mumbai has one of the busiest public transit networks in the world. Managing both buses and metro trains raises important everyday questions:
+* Which routes make the most ticket money, and which need schedule changes?
+* How long does an average commuter spend traveling per trip?
+* Which vehicles cost the most to repair, and which type is cheaper per passenger seat?
+* Are any spare buses sitting idle that could be used during rush hours?
+
+This project builds a clean 7-table relational database from scratch in MySQL, populates it with realistic Mumbai transit data, and answers these operational questions using SQL queries and reporting views.
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Files
 
 ```
 mumbai-smart-transit-sql/
 ├── data/
-│   ├── stations.csv                     # Transit stations (Metro & Bus terminals)
-│   ├── routes.csv                       # Origin-destination route definitions & distance
-│   ├── vehicles.csv                     # Rolling stock (Metro trains & Electric buses)
-│   ├── commuters.csv                    # Commuter demographics and transit pass tiers
-│   ├── trips.csv                        # Completed transit trips, timestamps & fares
-│   ├── route_assignment.csv             # Operational vehicle-to-route mappings
-│   └── maintenance.csv                  # Preventative & corrective maintenance logs
+│   ├── stations.csv                     # Metro and bus stations across Mumbai
+│   ├── routes.csv                       # Routes connecting origin and destination stops
+│   ├── vehicles.csv                     # Metro trains and electric buses
+│   ├── commuters.csv                    # Passenger profiles, age, zone, and pass type
+│   ├── trips.csv                        # Completed journeys, fares, and times
+│   ├── route_assignment.csv             # Which vehicle is scheduled to which route
+│   └── maintenance.csv                  # Vehicle repair history and costs
 ├── sql/
-│   ├── 01_schema_definition.sql         # Normalized DDL schema, PK/FK, CHECK constraints & indexes
-│   ├── 02_data_seed.sql                 # DML seed data and simulated fleet expansion updates
-│   ├── 03_views_and_procedures.sql      # Reusable views (vw_commuter_profile, vw_route_performance)
-│   └── 04_transit_analytics.sql         # 14 advanced operational KPI and window function queries
-├── .gitignore                           # Clean git configuration
+│   ├── 01_schema_definition.sql         # Creates tables, primary/foreign keys, and checks
+│   ├── 02_data_seed.sql                 # Inserts all sample data and updates
+│   ├── 03_views_and_procedures.sql      # Creates reusable views for quick reporting
+│   └── 04_transit_analytics.sql         # Analytical queries answering key questions
+├── .gitignore                           # Git settings
 ├── LICENSE                              # MIT License
-└── README.md                            # Comprehensive project documentation
+└── README.md                            # Project documentation
 ```
 
 ---
 
-## 🗄️ Relational Entity-Relationship (ER) Architecture
+## 🗄️ Database Architecture (ER Diagram)
+
+The 7 tables are connected using primary and foreign keys to keep data accurate and prevent missing records:
 
 ```mermaid
 erDiagram
-    STATIONS ||--o{ ROUTES : "origin / destination"
+    STATIONS ||--o{ ROUTES : "starts / ends at"
     ROUTES ||--o{ TRIPS : "serves"
-    COMMUTERS ||--o{ TRIPS : "boards"
-    ROUTES ||--o{ ROUTE_ASSIGNMENT : "allocated_to"
-    VEHICLES ||--o{ ROUTE_ASSIGNMENT : "assigned"
-    VEHICLES ||--o{ MAINTENANCE : "undergoes"
+    COMMUTERS ||--o{ TRIPS : "travels on"
+    ROUTES ||--o{ ROUTE_ASSIGNMENT : "scheduled on"
+    VEHICLES ||--o{ ROUTE_ASSIGNMENT : "assigned to"
+    VEHICLES ||--o{ MAINTENANCE : "serviced in"
 
     STATIONS {
         int station_id PK
@@ -126,185 +125,83 @@ erDiagram
 
 ---
 
-## 📋 Schema Data Dictionary
+## 📋 The 7 Database Tables
 
-| Table | Primary Key | Foreign Keys | Key Constraints & Indexes |
-| :--- | :--- | :--- | :--- |
-| **`stations`** | `station_id` | *None* | `station_type` (`Metro`, `Bus`) |
-| **`routes`** | `route_id` | `source_station`, `destination_station` | `CHECK (route_type IN ('Metro', 'Bus', 'Train'))` |
-| **`vehicles`** | `vehicle_id` | *None* | `CHECK (capacity > 0)` |
-| **`commuters`**| `commuter_id`| *None* | `CHECK (gender IN ('M', 'F', 'O'))` |
-| **`trips`** | `trip_id` | `commuter_id`, `route_id` | `CHECK (fare > 0)`, Indexes on `trip_date` & `route_id` |
-| **`route_assignment`** | `assignment_id` | `route_id`, `vehicle_id` | Cascade delete on route or vehicle termination |
-| **`maintenance`** | `maintenance_id` | `vehicle_id` | `CHECK (cost >= 0)` |
+1. **`stations`**: Major transit stops (Andheri, Dadar, Borivali, Bandra, Thane, Kurla) labeled as Metro or Bus.
+2. **`routes`**: Origin station, destination station, distance in kilometers, and mode (`Metro` or `Bus`).
+3. **`vehicles`**: Rolling stock (Metro rakes carrying up to 880 passengers, and Electric Buses carrying 50–55 passengers).
+4. **`commuters`**: Passengers with their age, gender, home zone, and pass type (`Monthly Pass`, `Student Pass`, `Senior Citizen`, `Pay Per Ride`).
+5. **`trips`**: Completed journeys recording the passenger, route, date, start time, end time, and ticket price.
+6. **`route_assignment`**: Connects which physical vehicle operates on which route.
+7. **`maintenance`**: Service logs tracking repair dates, parts replaced (brakes, batteries, general service), and costs in rupees.
 
 ---
 
-## 👁️ Reusable Reporting Views
+## 📊 Key Transit & Business Insights
 
-To decouple reporting dashboards from underlying physical tables, three optimized database views are defined in [`03_views_and_procedures.sql`](sql/03_views_and_procedures.sql):
+Here are the main operational findings discovered from the SQL queries:
 
-1. **`vw_commuter_profile`**: Aggregates rider frequency, cumulative fare spend, and average fare per trip by pass type and residential zone.
-2. **`vw_route_performance`**: Pre-computes trip volumes, gross route earnings, and **revenue per kilometer** metrics.
-3. **`vw_vehicle_fleet_health`**: Calculates fleet maintenance cost normalized per seat.
+### 1. Most Profitable Transit Corridor
+* The **Dadar to Borivali Metro route (Route 202)** earned the highest total ticket revenue. 
+* Its 22-kilometer distance and strong commuter demand between central and northern Mumbai make it the most profitable line in the network.
 
----
+### 2. Average Passenger Travel Time
+* The average journey duration across all completed trips was **42.5 minutes**.
+* Metro lines provided faster travel per kilometer compared to road-based bus routes which faced street traffic.
 
-## 📊 Key Transit KPIs & Operational Insights
+### 3. Metro vs. Bus Repair Cost per Passenger Seat
+* **Metro trains are much cheaper to maintain per passenger seat** than electric buses:
+  * **Metro Train:** Costs around **₹13.60 per seat** in maintenance because one train carries 880 passengers.
+  * **Electric Bus:** Costs between **₹60.00 and ₹90.00 per seat** in maintenance due to battery and brake servicing for a smaller vehicle (50 passengers).
+* *Takeaway:* For high-density routes, investing in metro lines is much more cost-effective per passenger than running dozens of separate buses.
 
-### 1. Multi-Table Relational 4-Way JOIN
-* **Objective:** Trace individual commuter trips through routes, vehicle assignments, and physical rolling stock.
-* **SQL Query:**
-```sql
-SELECT 
-    t.trip_id,
-    t.trip_date,
-    t.fare,
-    r.route_id,
-    r.route_type,
-    v.vehicle_id,
-    v.vehicle_type,
-    v.capacity
-FROM trips t
-JOIN routes r ON t.route_id = r.route_id
-JOIN route_assignment ra ON r.route_id = ra.route_id
-JOIN vehicles v ON ra.vehicle_id = v.vehicle_id;
-```
+### 4. Backup & Spare Vehicle Detection
+* Using a `LEFT JOIN`, the system quickly identified **1 unassigned Electric Bus** that was not scheduled to any active route.
+* *Takeaway:* Transit managers can keep this spare vehicle ready as an emergency backup during rush hours or when another bus breaks down.
 
----
+### 5. Passenger Travel Pass Adoption
+* Commuters aged 60 and older were automatically classified for **Senior Citizen discounts**.
+* Regular office commuters overwhelmingly use **Monthly Passes** (accounting for over 50% of frequent riders), which ensures guaranteed upfront revenue for the transit authority.
 
-### 2. Highest Revenue Transit Routes
-* **Objective:** Determine the top-performing transit corridor by total fare collections.
-* **SQL Query:**
-```sql
-SELECT 
-    r.route_id, 
-    r.route_type,
-    s1.station_name AS source_station,
-    s2.station_name AS destination_station,
-    SUM(t.fare) AS total_revenue
-FROM routes r
-JOIN stations s1 ON r.source_station = s1.station_id
-JOIN stations s2 ON r.destination_station = s2.station_id
-JOIN trips t ON r.route_id = t.route_id
-GROUP BY r.route_id, r.route_type, s1.station_name, s2.station_name
-ORDER BY total_revenue DESC
-LIMIT 1;
-```
+### 6. Busiest Home Zone
+* Passengers living in the **North zone (Borivali area)** took the most trips and contributed the highest cumulative ticket fares, confirming that northern suburbs are the main commuter feeder area for Mumbai city centers.
+
+### 7. Fleet Scheduling Efficiency
+* Metro trains achieved the highest trips-per-vehicle ratio, completing multiple back-to-back runs with quick turnaround times at terminal stations.
 
 ---
 
-### 3. Spare Fleet Detection (LEFT JOIN)
-* **Objective:** Identify rolling stock not currently scheduled to any active route assignment for standby availability.
-* **SQL Query:**
-```sql
-SELECT v.vehicle_id, v.vehicle_type, v.capacity, v.manufacture_year
-FROM vehicles v
-LEFT JOIN route_assignment ra ON v.vehicle_id = ra.vehicle_id
-WHERE ra.vehicle_id IS NULL;
-```
+## 🛠️ SQL Skills Used
+
+* **Relational Database Design:** Normalization, Primary Keys, Foreign Keys with automatic cascade rules.
+* **Data Validation Rules:** `CHECK` constraints ensuring ticket prices are positive and route types are valid.
+* **Speed Optimization:** Indexes on trip dates and route IDs for fast lookups.
+* **4-Way Table Joins:** Combining trips, routes, vehicle assignments, and vehicle details in a single query.
+* **Reporting Views:** Creating saved views (`vw_commuter_profile`, `vw_route_performance`) so dashboards can fetch clean summaries without writing complex joins every time.
+* **Window Functions:** Ranking commuters and vehicles by spending and repair costs using `RANK() OVER ()`.
+* **Time Calculations:** Using `TIMESTAMPDIFF(MINUTE, start_time, end_time)` to calculate trip durations in minutes.
 
 ---
 
-### 4. Commuter Spend Segmentation (Window Functions)
-* **Objective:** Rank top riders across the transit network without row group collapse.
-* **SQL Query:**
-```sql
-SELECT commuter_id, commuter_name, total_spent, spending_rank
-FROM (
-    SELECT 
-        c.commuter_id, 
-        c.commuter_name,
-        SUM(t.fare) AS total_spent,
-        RANK() OVER (ORDER BY SUM(t.fare) DESC) AS spending_rank
-    FROM commuters c
-    JOIN trips t ON c.commuter_id = t.commuter_id
-    GROUP BY c.commuter_id, c.commuter_name
-) AS ranked_commuters
-WHERE spending_rank <= 5;
-```
+## 🚀 How to Run This Project
 
----
+### What You Need
+* MySQL Server or MySQL Workbench installed on your computer.
 
-### 5. Vehicle Maintenance Cost per Seat
-* **Objective:** Determine which vehicle classification delivers the lowest maintenance overhead per passenger seat.
-* **SQL Query:**
-```sql
-SELECT 
-    v.vehicle_type,
-    SUM(m.cost) AS total_maintenance_cost,
-    AVG(v.capacity) AS avg_capacity,
-    ROUND(SUM(m.cost) / AVG(v.capacity), 2) AS maintenance_cost_per_seat
-FROM vehicles v
-JOIN maintenance m ON v.vehicle_id = m.vehicle_id
-GROUP BY v.vehicle_type
-ORDER BY maintenance_cost_per_seat ASC
-LIMIT 1;
-```
-
----
-
-### 6. Fleet Operational Utilization Ratio
-* **Objective:** Calculate the route with the highest completed trip-to-assigned-vehicle ratio.
-* **SQL Query:**
-```sql
-SELECT 
-    r.route_id, 
-    r.route_type,
-    COUNT(DISTINCT t.trip_id) AS total_trips,
-    COUNT(DISTINCT ra.vehicle_id) AS assigned_vehicles,
-    ROUND(COUNT(DISTINCT t.trip_id) / COUNT(DISTINCT ra.vehicle_id), 2) AS trips_per_vehicle
-FROM routes r
-JOIN trips t ON r.route_id = t.route_id
-JOIN route_assignment ra ON r.route_id = ra.route_id
-GROUP BY r.route_id, r.route_type
-ORDER BY trips_per_vehicle DESC
-LIMIT 1;
-```
-
----
-
-## 🛠️ Database Administration & SQL Highlights
-
-* **Referential Integrity Enforcement:** Foreign Keys ensure orphaned trips, unmapped routes, and invalid maintenance records cannot be inserted.
-* **Performance Indexing:** Indexes created on high-cardinality foreign keys (`idx_trip_date`, `idx_trip_route`) to optimize query execution plans.
-* **Domain Check Constraints:** `CHECK (route_type IN ('Metro', 'Bus'))` and `CHECK (fare > 0)` enforce business data validation at the storage layer.
-* **Window Functions:** Applied `RANK() OVER (ORDER BY ...)` for analytical reporting and dynamic ranking without subquery overhead.
-* **Temporal Calculations:** Utilized `TIMESTAMPDIFF(MINUTE, start_time, end_time)` for precise transit trip duration benchmarking.
-
----
-
-## 🚀 Quickstart & Setup Guide
-
-### Prerequisites
-* **MySQL Server 8.0+** or **MySQL Workbench** installed locally.
-* Git installed on your machine.
-
-### Step 1: Clone the Repository
-```bash
-git clone https://github.com/jadavharsh109/mumbai-smart-transit-sql.git
-cd mumbai-smart-transit-sql
-```
-
-### Step 2: Initialize Database Schema
-```sql
-SOURCE sql/01_schema_definition.sql;
-```
-
-### Step 3: Seed Data & Apply Transformations
-```sql
-SOURCE sql/02_data_seed.sql;
-```
-
-### Step 4: Create Reusable Reporting Views
-```sql
-SOURCE sql/03_views_and_procedures.sql;
-```
-
-### Step 5: Execute Analytics Queries
-```sql
-SOURCE sql/04_transit_analytics.sql;
-```
+### Step-by-Step Instructions
+1. **Clone this repository:**
+   ```bash
+   git clone https://github.com/jadavharsh109/mumbai-smart-transit-sql.git
+   cd mumbai-smart-transit-sql
+   ```
+2. **Create the database and tables:**
+   * Run [`sql/01_schema_definition.sql`](sql/01_schema_definition.sql) in MySQL Workbench.
+3. **Insert the sample data:**
+   * Run [`sql/02_data_seed.sql`](sql/02_data_seed.sql).
+4. **Create the reporting views:**
+   * Run [`sql/03_views_and_procedures.sql`](sql/03_views_and_procedures.sql).
+5. **Run the analysis queries:**
+   * Run [`sql/04_transit_analytics.sql`](sql/04_transit_analytics.sql) to see all the operational and revenue insights.
 
 ---
 
@@ -315,4 +212,4 @@ SOURCE sql/04_transit_analytics.sql;
 * 🐙 **GitHub:** [github.com/jadavharsh109](https://github.com/jadavharsh109)
 * 📧 **Email:** [jadavharsh109@gmail.com](mailto:jadavharsh109@gmail.com)
 
-*If you found this database architecture useful, please consider giving this repository a ⭐!*
+*If this database design and analysis was interesting or useful to you, please give it a ⭐!*
